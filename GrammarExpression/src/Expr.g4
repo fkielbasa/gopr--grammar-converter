@@ -1,6 +1,14 @@
 grammar Expr;
-start_ : expr (';' expr)* EOF;
-expr : atom | ('+' | '-') expr | expr '**' expr | expr ('*' | '/') expr | expr ('+' | '-') expr | '(' expr ')' | atom ;
-atom : INT ;
+
+program : (expression WS?)* EOF;
+
+expression : label '(' subexpression (WS? 'V' WS? subexpression)* ')';
+
+subexpression : WS? label WS?;
+
+label : BEGIN_LABEL INT | LETTER INT | '(' label (WS? 'V' WS? label)* ')';
+
+BEGIN_LABEL : ('E' | 'd') WS;
 INT : [0-9]+ ;
-WS : [ \t\n\r]+ -> skip ;
+LETTER : [a-zA-Z] ;
+WS : [ \t\n\r] -> skip ;
