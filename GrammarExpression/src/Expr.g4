@@ -1,12 +1,12 @@
 grammar Expr;
 
-program : expression EOF;
+program : (expression WS?)* EOF;
 
-expression : label '^' '(' subexpression ')' ;
+expression : label '^' '(' subexpression ')' | label;
 
-subexpression : label ('V' label)*;
+subexpression : WS? expression (WS? 'V' WS? expression)* WS?;
 
-label : BEGIN_LABEL INT | LETTER INT;
+label : BEGIN_LABEL INT | LETTER INT | '(' subexpression ')';
 
 BEGIN_LABEL : ('E' | 'd');
 INT : [0-9]+ ;
