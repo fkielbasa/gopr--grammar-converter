@@ -1,14 +1,14 @@
 grammar Expr;
 
-program : (expression WS?)* EOF;
+program : expression EOF;
 
-expression : label '(' subexpression (WS? 'V' WS? subexpression)* ')';
+expression : label '^' '(' subexpression ')' ;
 
-subexpression : WS? label WS?;
+subexpression : label ('V' label)*;
 
-label : BEGIN_LABEL INT | LETTER INT | '(' label (WS? 'V' WS? label)* ')';
+label : BEGIN_LABEL INT | LETTER INT;
 
-BEGIN_LABEL : ('E' | 'd') WS;
+BEGIN_LABEL : ('E' | 'd');
 INT : [0-9]+ ;
 LETTER : [a-zA-Z] ;
-WS : [ \t\n\r] -> skip ;
+WS : [ \t\n\r]+ -> skip ;
