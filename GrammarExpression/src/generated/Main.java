@@ -8,9 +8,7 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        String tString = "d4 ^ (w2 V w3) V (f2 V f3) V (t2 V t3) V (r2 V r3) V (a2 V a3 V a4 V a5)";
-
-        //String t2String = tString;
+        String tString = "d4 ^ (w2 V w3) V (f2 V f3)";
 
         // Usuń wartości "V" spoza nawiasów
         String t2String = removeVsOutsideParentheses(tString);
