@@ -29,6 +29,8 @@ public class Main {
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, program);
 
+        ////////////////////////////////////////////
+
         // Przechowujemy alerty i ich wartości w mapie, używając LinkedHashMap do zachowania kolejności
         Map<String, String> alerts = new LinkedHashMap<>();
         alerts.put("d4 (w2 V w3) V (f2 V f3) V (t2 V t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E5");
