@@ -4,11 +4,12 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        String tString = "d4 ^ (w2 V w3) V (f2 V f3)";
+        String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
 
         // Usuń wartości "V" spoza nawiasów
         String t2String = removeVsOutsideParentheses(tString);
@@ -28,10 +29,10 @@ public class Main {
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, program);
 
-        // Przechowujemy alerty i ich wartości w mapie
-        Map<String, String> alerts = new HashMap<>();
+        // Przechowujemy alerty i ich wartości w mapie, używając LinkedHashMap do zachowania kolejności
+        Map<String, String> alerts = new LinkedHashMap<>();
         alerts.put("d4 (w2 V w3) V (f2 V f3) V (t2 V t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E5");
-        alerts.put("d3 (w2 V w3) V ( f2 V f3) V (t3) V (r2 V r3) V (a3 V a4 V a5)", "E5");
+        alerts.put("d3 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a3 V a4 V a5)", "E5");
         alerts.put("d2 (w3) V (f3) V (t3) V (r3) V (a4 V a5)", "E5");
         alerts.put("d1 (w3) V (f3) V (r3) V (a4 V a5)", "E5");
         alerts.put("d4 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E4");
@@ -52,7 +53,7 @@ public class Main {
         String cleanedTString = tString.replace("^", "").replaceFirst(" ", "").trim();
 
         // Sprawdzamy, czy cleanedTString pasuje do któregoś z alertów
-        String alertValue = alerts.getOrDefault(cleanedTString, "Unknown");
+        String alertValue = findBestMatchingAlert(cleanedTString, alerts);
 
         // Parsowanie warunków pogodowych z tString
         Map<String, String> conditions = parseConditions(cleanedTString);
@@ -104,6 +105,15 @@ public class Main {
             }
         }
         return conditions;
+    }
+
+    private static String findBestMatchingAlert(String cleanedTString, Map<String, String> alerts) {
+        for (Map.Entry<String, String> entry : alerts.entrySet()) {
+            if (entry.getKey().contains(cleanedTString)) {
+                return entry.getValue();
+            }
+        }
+        return "Unknown";
     }
 
     private static String generateJson(String routeName, String routeDifficulty, String alert, Map<String, String> conditions) {
