@@ -1,14 +1,17 @@
+package generated;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
+        String filePath = "src/generated/alerts.txt";
         String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
 
         // Usuń wartości "V" spoza nawiasów
@@ -31,40 +34,38 @@ public class Main {
 
         ////////////////////////////////////////////
 
-        // Przechowujemy alerty i ich wartości w mapie, używając LinkedHashMap do zachowania kolejności
-        Map<String, String> alerts = new LinkedHashMap<>();
-        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t2 V t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E5");
-        alerts.put("d3 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a3 V a4 V a5)", "E5");
-        alerts.put("d2 (w3) V (f3) V (t3) V (r3) V (a4 V a5)", "E5");
-        alerts.put("d1 (w3) V (f3) V (r3) V (a4 V a5)", "E5");
-        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E4");
-        alerts.put("d3 (w2 V w3) V (f2 V f3) V (t3) V (r3) V (a3 V a4 V a5)", "E4");
-        alerts.put("d2 (w3) V (f3) V (r3) V (a4 V a5)", "E4");
-        alerts.put("d1 (w3) V (r3) V (a4 V a5)", "E4");
-        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)", "E3");
-        alerts.put("d3 (w2 V w3) V (f3) V (t3) V (r3) V (a3 V a4 V a5)", "E3");
-        alerts.put("d2 (w3) V (f3) V (a4 V a5)", "E3");
-        alerts.put("d1 (w3) V (a4 V a5)", "E3");
-        alerts.put("d4 (w2 V w3) V (f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)", "E2");
-        alerts.put("d3 (w2 V w3) V (f3) V (t3) V (a3 V a4 V a5)", "E2");
-        alerts.put("d2 (w3) V (a4 V a5)", "E2");
-        alerts.put("d1 (a4 V a5)", "E2");
-        alerts.put("E1", "E1");
+//        // Przechowujemy alerty i ich wartości w mapie, używając LinkedHashMap do zachowania kolejności
+//        Map<String, String> alerts = new LinkedHashMap<>();
+//        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t2 V t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E5");
+//        alerts.put("d3 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a3 V a4 V a5)", "E5");
+//        alerts.put("d2 (w3) V (f3) V (t3) V (r3) V (a4 V a5)", "E5");
+//        alerts.put("d1 (w3) V (f3) V (r3) V (a4 V a5)", "E5");
+//        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E4");
+//        alerts.put("d3 (w2 V w3) V (f2 V f3) V (t3) V (r3) V (a3 V a4 V a5)", "E4");
+//        alerts.put("d2 (w3) V (f3) V (r3) V (a4 V a5)", "E4");
+//        alerts.put("d1 (w3) V (r3) V (a4 V a5)", "E4");
+//        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)", "E3");
+//        alerts.put("d3 (w2 V w3) V (f3) V (t3) V (r3) V (a3 V a4 V a5)", "E3");
+//        alerts.put("d2 (w3) V (f3) V (a4 V a5)", "E3");
+//        alerts.put("d1 (w3) V (a4 V a5)", "E3");
+//        alerts.put("d4 (w2 V w3) V (f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)", "E2");
+//        alerts.put("d3 (w2 V w3) V (f3) V (t3) V (a3 V a4 V a5)", "E2");
+//        alerts.put("d2 (w3) V (a4 V a5)", "E2");
+//        alerts.put("d1 (a4 V a5)", "E2");
+//        alerts.put("E1", "E1");
 
-        // Usuń znak ^ z tString i jeden znak spacji
+        Map<String, String> alerts = AlertsLoader.loadAlerts(filePath);
+        System.out.println(alerts);
+
         String cleanedTString = tString.replace("^", "").replaceFirst(" ", "").trim();
 
-        // Sprawdzamy, czy cleanedTString pasuje do któregoś z alertów
         String alertValue = findBestMatchingAlert(cleanedTString, alerts);
 
-        // Parsowanie warunków pogodowych z tString
         Map<String, String> conditions = parseConditions(cleanedTString);
 
-        // Zakładamy, że MyExprListener wypełnia poniższe pola
         String routeName = "Example Route";
         String routeDifficulty = "Moderate";
 
-        // Generowanie JSON-a ręcznie
         String json = generateJson(routeName, routeDifficulty, alertValue, conditions);
         System.out.println(json);
     }

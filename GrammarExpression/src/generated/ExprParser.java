@@ -1,4 +1,5 @@
 // Generated from C:/Users/kubad/Documents/GitHub/gopr-grammar-converter/GrammarExpression/src/Expr.g4 by ANTLR 4.13.1
+package generated;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -318,7 +319,7 @@ public class ExprParser extends Parser {
 					setState(39);
 					expression();
 					}
-					} 
+					}
 				}
 				setState(44);
 				_errHandler.sync(this);
