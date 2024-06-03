@@ -10,8 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Main {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_GREEN = "\u001B[32m";
     public static void main(String[] args) {
         String filePath = "src/generated/alerts.txt";
         String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
@@ -70,7 +68,7 @@ public class Main {
         String routeDifficulty = "Moderate";
 
         String json = generateJson(routeName, routeDifficulty, alertValue, conditions);
-        System.out.println(ANSI_GREEN + json + ANSI_RESET);
+        System.out.println(MyColors.ANSI_GREEN + json + MyColors.ANSI_RESET);
 
     }
 
