@@ -1,19 +1,66 @@
 package generated;
+
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import java.nio.file.Paths;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
         String filePath = "src/generated/alerts.txt";
+        String outputFilePath = "src/generated/output.txt";
+
         String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
 
+        // Przekierowanie wyjścia konsoli do pliku
+        try (PrintStream fileOut = new PrintStream(new FileOutputStream(outputFilePath))) {
+            fileOut.println(tString + "\n");
+
+            // Usuń wartości "V" spoza nawiasów
+            String t2String = removeVsOutsideParentheses(tString);
+
+            CharStream stream = CharStreams.fromString(t2String);
+            ExprLexer lexer = new ExprLexer(stream);
+            ExprParser parser = new ExprParser(new org.antlr.v4.runtime.CommonTokenStream(lexer));
+
+            ExprParser.ProgramContext program = null;
+            try {
+                program = parser.program();
+            } catch (RecognitionException e) {
+                throw new RuntimeException(e);
+            }
+
+            MyExprListener listener = new MyExprListener(fileOut);
+            ParseTreeWalker walker = new ParseTreeWalker();
+            walker.walk(listener, program);
+
+            ////////////////////////////////////////////
+
+            Map<String, String> alerts = AlertsLoader.loadAlerts(filePath);
+
+            String cleanedTString = tString.replace("^", "").replaceFirst(" ", "").trim();
+
+            String alertValue = findBestMatchingAlert(cleanedTString, alerts);
+
+            Map<String, String> conditions = parseConditions(cleanedTString);
+
+            String routeName = "Example Route";
+            String routeDifficulty = "Moderate";
+
+            String json = generateJson(routeName, routeDifficulty, alertValue, conditions);
+            fileOut.println("\n" + json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Ponowne wypisanie danych z kolorowaniem w konsoli
+        System.out.println(MyColors.ANSI_RED + tString + MyColors.ANSI_RESET + "\n");
 
         // Usuń wartości "V" spoza nawiasów
         String t2String = removeVsOutsideParentheses(tString);
@@ -29,34 +76,11 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        MyExprListener listener = new MyExprListener();
+        MyExprListener listener = new MyExprListener(System.out);
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, program);
 
-        ////////////////////////////////////////////
-
-//        // Przechowujemy alerty i ich wartości w mapie, używając LinkedHashMap do zachowania kolejności
-//        Map<String, String> alerts = new LinkedHashMap<>();
-//        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t2 V t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E5");
-//        alerts.put("d3 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a3 V a4 V a5)", "E5");
-//        alerts.put("d2 (w3) V (f3) V (t3) V (r3) V (a4 V a5)", "E5");
-//        alerts.put("d1 (w3) V (f3) V (r3) V (a4 V a5)", "E5");
-//        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E4");
-//        alerts.put("d3 (w2 V w3) V (f2 V f3) V (t3) V (r3) V (a3 V a4 V a5)", "E4");
-//        alerts.put("d2 (w3) V (f3) V (r3) V (a4 V a5)", "E4");
-//        alerts.put("d1 (w3) V (r3) V (a4 V a5)", "E4");
-//        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)", "E3");
-//        alerts.put("d3 (w2 V w3) V (f3) V (t3) V (r3) V (a3 V a4 V a5)", "E3");
-//        alerts.put("d2 (w3) V (f3) V (a4 V a5)", "E3");
-//        alerts.put("d1 (w3) V (a4 V a5)", "E3");
-//        alerts.put("d4 (w2 V w3) V (f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)", "E2");
-//        alerts.put("d3 (w2 V w3) V (f3) V (t3) V (a3 V a4 V a5)", "E2");
-//        alerts.put("d2 (w3) V (a4 V a5)", "E2");
-//        alerts.put("d1 (a4 V a5)", "E2");
-//        alerts.put("E1", "E1");
-
         Map<String, String> alerts = AlertsLoader.loadAlerts(filePath);
-        System.out.println(alerts);
 
         String cleanedTString = tString.replace("^", "").replaceFirst(" ", "").trim();
 
@@ -68,8 +92,7 @@ public class Main {
         String routeDifficulty = "Moderate";
 
         String json = generateJson(routeName, routeDifficulty, alertValue, conditions);
-        System.out.println(MyColors.ANSI_GREEN + json + MyColors.ANSI_RESET);
-
+        System.out.println("\n" + MyColors.ANSI_GREEN + json + MyColors.ANSI_RESET);
     }
 
     private static String removeVsOutsideParentheses(String t2String) {
