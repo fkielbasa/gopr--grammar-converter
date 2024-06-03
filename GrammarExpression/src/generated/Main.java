@@ -1,22 +1,31 @@
 package generated;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import dto.Route;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+//        String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
         String filePath = "src/generated/alerts.txt";
         String outputFilePath = "src/generated/output.txt";
 
         String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter alert: ");
+        String tString = scanner.nextLine();
+        scanner.close();
 
         // Przekierowanie wyjścia konsoli do pliku
         try (PrintStream fileOut = new PrintStream(new FileOutputStream(outputFilePath))) {
@@ -62,7 +71,6 @@ public class Main {
         // Ponowne wypisanie danych z kolorowaniem w konsoli
         System.out.println(MyColors.ANSI_RED + tString + MyColors.ANSI_RESET + "\n");
 
-        // Usuń wartości "V" spoza nawiasów
         String t2String = removeVsOutsideParentheses(tString);
 
         CharStream stream = CharStreams.fromString(t2String);
@@ -88,8 +96,8 @@ public class Main {
 
         Map<String, String> conditions = parseConditions(cleanedTString);
 
-        String routeName = "Example Route";
-        String routeDifficulty = "Moderate";
+        String routeName = "Route 1";
+        String routeDifficulty = mapAlertToLevel(alertValue);
 
         String json = generateJson(routeName, routeDifficulty, alertValue, conditions);
         System.out.println("\n" + MyColors.ANSI_GREEN + json + MyColors.ANSI_RESET);
@@ -143,24 +151,24 @@ public class Main {
         }
         return "Unknown";
     }
+    private static String mapAlertToLevel(String alertValue) {
+        switch (alertValue) {
+            case "E1":
+            case "E2":
+                return "good";
+            case "E3":
+                return "moderate";
+            case "E4":
+            case "E5":
+                return "bad";
+            default:
+                return "unknown";
+        }
+    }
 
     private static String generateJson(String routeName, String routeDifficulty, String alert, Map<String, String> conditions) {
-        StringBuilder json = new StringBuilder();
-        json.append("{\n");
-
-        json.append("  \"routeName\": \"").append(routeName).append("\",\n");
-        json.append("  \"routeDifficulty\": \"").append(routeDifficulty).append("\",\n");
-        json.append("  \"alert\": \"").append(alert).append("\",\n");
-
-        json.append("  \"conditions\": {\n");
-        for (Map.Entry<String, String> entry : conditions.entrySet()) {
-            json.append("    \"").append(entry.getKey()).append("\": \"").append(entry.getValue()).append("\",\n");
-        }
-        // Remove the last comma
-        json.deleteCharAt(json.lastIndexOf(","));
-        json.append("\n  }\n");
-
-        json.append("}");
-        return json.toString();
+        Route route = new Route(routeName, routeDifficulty, alert, conditions);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(route);
     }
 }
