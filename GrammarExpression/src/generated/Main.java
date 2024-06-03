@@ -8,8 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Main {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GREEN = "\u001B[32m";
     public static void main(String[] args) {
-        String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
+        String tString = "d4 ^ (w2 V w3)";
 
         // Usuń wartości "V" spoza nawiasów
         String t2String = removeVsOutsideParentheses(tString);
@@ -66,7 +68,8 @@ public class Main {
 
         // Generowanie JSON-a ręcznie
         String json = generateJson(routeName, routeDifficulty, alertValue, conditions);
-        System.out.println(json);
+        System.out.println(ANSI_GREEN + json + ANSI_RESET);
+
     }
 
     private static String removeVsOutsideParentheses(String t2String) {
