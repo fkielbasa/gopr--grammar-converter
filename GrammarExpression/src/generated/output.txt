@@ -1,31 +1,26 @@
-d2 ^ (w3) V (f3) V (a4 V a5)
+d4 ^ (w2 V w3) V (f2 V f3)
 
-Expression: d2^(w3)
-Label: d2
-Subexpression: w3
+Expression: d4^(w2Vw3)
+Label: d4
+Subexpression: w2Vw3
+Expression: w2
+Label: w2
 Expression: w3
 Label: w3
-Expression: (f3)
-Label: (f3)
-Subexpression: f3
+Expression: (f2Vf3)
+Label: (f2Vf3)
+Subexpression: f2Vf3
+Expression: f2
+Label: f2
 Expression: f3
 Label: f3
-Expression: (a4Va5)
-Label: (a4Va5)
-Subexpression: a4Va5
-Expression: a4
-Label: a4
-Expression: a5
-Label: a5
 
 {
-  "routeName": "Example Route",
-  "routeDifficulty": "Moderate",
-  "alert": "E3",
+  "routeName": "Route 1",
+  "weatherConditions": "bad",
+  "alert": "E5",
   "conditions": {
-    "avalancheRisk": "a4 V a5",
-    "wind": "w3",
-    "fog": "f3"
-
+    "wind": "w2 V w3",
+    "fog": "f2 V f3"
   }
 }
