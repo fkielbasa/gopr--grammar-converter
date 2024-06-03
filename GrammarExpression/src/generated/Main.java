@@ -23,7 +23,6 @@ public class Main {
         scanner.close();
 
 
-
         String t2String = removeVsOutsideParentheses(tString);
 
         CharStream stream = CharStreams.fromString(t2String);
@@ -41,27 +40,6 @@ public class Main {
         ParseTreeWalker walker = new ParseTreeWalker();
         walker.walk(listener, program);
 
-        ////////////////////////////////////////////
-
-//        // Przechowujemy alerty i ich wartości w mapie, używając LinkedHashMap do zachowania kolejności
-//        Map<String, String> alerts = new LinkedHashMap<>();
-//        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t2 V t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E5");
-//        alerts.put("d3 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a3 V a4 V a5)", "E5");
-//        alerts.put("d2 (w3) V (f3) V (t3) V (r3) V (a4 V a5)", "E5");
-//        alerts.put("d1 (w3) V (f3) V (r3) V (a4 V a5)", "E5");
-//        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a2 V a3 V a4 V a5)", "E4");
-//        alerts.put("d3 (w2 V w3) V (f2 V f3) V (t3) V (r3) V (a3 V a4 V a5)", "E4");
-//        alerts.put("d2 (w3) V (f3) V (r3) V (a4 V a5)", "E4");
-//        alerts.put("d1 (w3) V (r3) V (a4 V a5)", "E4");
-//        alerts.put("d4 (w2 V w3) V (f2 V f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)", "E3");
-//        alerts.put("d3 (w2 V w3) V (f3) V (t3) V (r3) V (a3 V a4 V a5)", "E3");
-//        alerts.put("d2 (w3) V (f3) V (a4 V a5)", "E3");
-//        alerts.put("d1 (w3) V (a4 V a5)", "E3");
-//        alerts.put("d4 (w2 V w3) V (f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)", "E2");
-//        alerts.put("d3 (w2 V w3) V (f3) V (t3) V (a3 V a4 V a5)", "E2");
-//        alerts.put("d2 (w3) V (a4 V a5)", "E2");
-//        alerts.put("d1 (a4 V a5)", "E2");
-//        alerts.put("E1", "E1");
 
         Map<String, String> alerts = AlertsLoader.loadAlerts(filePath);
 
@@ -71,8 +49,8 @@ public class Main {
 
         Map<String, String> conditions = parseConditions(cleanedTString);
 
-        String routeName = "Example Route";
-        String routeDifficulty = "Moderate";
+        String routeName = "Route 1";
+        String routeDifficulty = mapAlertToLevel(alertValue);
 
         String json = generateJson(routeName, routeDifficulty, alertValue, conditions);
         System.out.println(ANSI_GREEN + json + ANSI_RESET);
@@ -127,26 +105,21 @@ public class Main {
         }
         return "Unknown";
     }
+    private static String mapAlertToLevel(String alertValue) {
+        switch (alertValue) {
+            case "E1":
+            case "E2":
+                return "good";
+            case "E3":
+                return "moderate";
+            case "E4":
+            case "E5":
+                return "bad";
+            default:
+                return "unknown";
+        }
+    }
 
-//    private static String generateJson(String routeName, String routeDifficulty, String alert, Map<String, String> conditions) {
-//        StringBuilder json = new StringBuilder();
-//        json.append("{\n");
-//
-//        json.append("  \"routeName\": \"").append(routeName).append("\",\n");
-//        json.append("  \"routeDifficulty\": \"").append(routeDifficulty).append("\",\n");
-//        json.append("  \"alert\": \"").append(alert).append("\",\n");
-//
-//        json.append("  \"conditions\": {\n");
-//        for (Map.Entry<String, String> entry : conditions.entrySet()) {
-//            json.append("    \"").append(entry.getKey()).append("\": \"").append(entry.getValue()).append("\",\n");
-//        }
-//        // Remove the last comma
-//        json.deleteCharAt(json.lastIndexOf(","));
-//        json.append("\n  }\n");
-//
-//        json.append("}");
-//        return json.toString();
-//    }
     private static String generateJson(String routeName, String routeDifficulty, String alert, Map<String, String> conditions) {
         Route route = new Route(routeName, routeDifficulty, alert, conditions);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
