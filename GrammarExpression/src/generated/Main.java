@@ -1,23 +1,29 @@
 package generated;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import dto.Route;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static void main(String[] args) {
+//        String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
         String filePath = "src/generated/alerts.txt";
-        String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter alert: ");
+        String tString = scanner.nextLine();
+        scanner.close();
 
 
-        // Usuń wartości "V" spoza nawiasów
+
         String t2String = removeVsOutsideParentheses(tString);
 
         CharStream stream = CharStreams.fromString(t2String);
@@ -58,7 +64,6 @@ public class Main {
 //        alerts.put("E1", "E1");
 
         Map<String, String> alerts = AlertsLoader.loadAlerts(filePath);
-        System.out.println(alerts);
 
         String cleanedTString = tString.replace("^", "").replaceFirst(" ", "").trim();
 
@@ -123,23 +128,28 @@ public class Main {
         return "Unknown";
     }
 
+//    private static String generateJson(String routeName, String routeDifficulty, String alert, Map<String, String> conditions) {
+//        StringBuilder json = new StringBuilder();
+//        json.append("{\n");
+//
+//        json.append("  \"routeName\": \"").append(routeName).append("\",\n");
+//        json.append("  \"routeDifficulty\": \"").append(routeDifficulty).append("\",\n");
+//        json.append("  \"alert\": \"").append(alert).append("\",\n");
+//
+//        json.append("  \"conditions\": {\n");
+//        for (Map.Entry<String, String> entry : conditions.entrySet()) {
+//            json.append("    \"").append(entry.getKey()).append("\": \"").append(entry.getValue()).append("\",\n");
+//        }
+//        // Remove the last comma
+//        json.deleteCharAt(json.lastIndexOf(","));
+//        json.append("\n  }\n");
+//
+//        json.append("}");
+//        return json.toString();
+//    }
     private static String generateJson(String routeName, String routeDifficulty, String alert, Map<String, String> conditions) {
-        StringBuilder json = new StringBuilder();
-        json.append("{\n");
-
-        json.append("  \"routeName\": \"").append(routeName).append("\",\n");
-        json.append("  \"routeDifficulty\": \"").append(routeDifficulty).append("\",\n");
-        json.append("  \"alert\": \"").append(alert).append("\",\n");
-
-        json.append("  \"conditions\": {\n");
-        for (Map.Entry<String, String> entry : conditions.entrySet()) {
-            json.append("    \"").append(entry.getKey()).append("\": \"").append(entry.getValue()).append("\",\n");
-        }
-        // Remove the last comma
-        json.deleteCharAt(json.lastIndexOf(","));
-        json.append("\n  }\n");
-
-        json.append("}");
-        return json.toString();
+        Route route = new Route(routeName, routeDifficulty, alert, conditions);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(route);
     }
 }
