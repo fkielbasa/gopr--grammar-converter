@@ -16,9 +16,10 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-//        String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
         String filePath = "src/generated/alerts.txt";
         String outputFilePath = "src/generated/output.txt";
+
+        // String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
 
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter alert: ");
@@ -45,8 +46,6 @@ public class Main {
             ParseTreeWalker walker = new ParseTreeWalker();
             walker.walk(listener, program);
 
-            ////////////////////////////////////////////
-
             Map<String, String> alerts = AlertsLoader.loadAlerts(filePath);
 
             String cleanedTString = tString.replace("^", "").replaceFirst(" ", "").trim();
@@ -55,8 +54,8 @@ public class Main {
 
             Map<String, String> conditions = parseConditions(cleanedTString);
 
-            String routeName = "Example Route";
-            String routeDifficulty = "Moderate";
+            String routeName = "Route 1";
+            String routeDifficulty = mapAlertToLevel(alertValue);
 
             String json = generateJson(routeName, routeDifficulty, alertValue, conditions);
             fileOut.println("\n" + json);
