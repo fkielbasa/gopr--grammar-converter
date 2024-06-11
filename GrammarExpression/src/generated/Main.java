@@ -20,18 +20,14 @@ public class Main {
         String filePath = "src/generated/alerts.txt";
         String outputFilePath = "src/generated/output.txt";
 
-        String tString = "d2 ^ (w3) V (f3) V (a4 V a5)";
-
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter alert: ");
         String tString = scanner.nextLine();
         scanner.close();
 
-        // Przekierowanie wyjścia konsoli do pliku
         try (PrintStream fileOut = new PrintStream(new FileOutputStream(outputFilePath))) {
             fileOut.println(tString + "\n");
 
-            // Usuń wartości "V" spoza nawiasów
             String t2String = removeVsOutsideParentheses(tString);
 
             CharStream stream = CharStreams.fromString(t2String);
@@ -68,7 +64,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Ponowne wypisanie danych z kolorowaniem w konsoli
         System.out.println(MyColors.ANSI_RED + tString + MyColors.ANSI_RESET + "\n");
 
         String t2String = removeVsOutsideParentheses(tString);

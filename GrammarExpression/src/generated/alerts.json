@@ -1,0 +1,97 @@
+{
+  "alerts": [
+    {
+      "level": "E5",
+      "conditions": [
+        {
+          "label": "d4",
+          "expression": "(w2 V w3) V (f2 V f3) V (t2 V t3) V (r2 V r3) V (a2 V a3 V a4 V a5)"
+        },
+        {
+          "label": "d3",
+          "expression": "(w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a3 V a4 V a5)"
+        },
+        {
+          "label": "d2",
+          "expression": "(w3) V (f3) V (t3) V (r3) V (a4 V a5)"
+        },
+        {
+          "label": "d1",
+          "expression": "(w3) V (f3) V (r3) V (a4 V a5)"
+        }
+      ]
+    },
+    {
+      "level": "E4",
+      "conditions": [
+        {
+          "label": "d4",
+          "expression": "(w2 V w3) V (f2 V f3) V (t3) V (r2 V r3) V (a2 V a3 V a4 V a5)"
+        },
+        {
+          "label": "d3",
+          "expression": "(w2 V w3) V (f2 V f3) V (t3) V (r3) V (a3 V a4 V a5)"
+        },
+        {
+          "label": "d2",
+          "expression": "(w3) V (f3) V (r3) V (a4 V a5)"
+        },
+        {
+          "label": "d1",
+          "expression": "(w3) V (r3) V (a4 V a5)"
+        }
+      ]
+    },
+    {
+      "level": "E3",
+      "conditions": [
+        {
+          "label": "d4",
+          "expression": "(w2 V w3) V (f2 V f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)"
+        },
+        {
+          "label": "d3",
+          "expression": "(w2 V w3) V (f3) V (t3) V (r3) V (a3 V a4 V a5)"
+        },
+        {
+          "label": "d2",
+          "expression": "(w3) V (f3) V (a4 V a5)"
+        },
+        {
+          "label": "d1",
+          "expression": "(w3) V (a4 V a5)"
+        }
+      ]
+    },
+    {
+      "level": "E2",
+      "conditions": [
+        {
+          "label": "d4",
+          "expression": "(w2 V w3) V (f3) V (t3) V (r3) V (a2 V a3 V a4 V a5)"
+        },
+        {
+          "label": "d3",
+          "expression": "(w2 V w3) V (f3) V (t3) V (a3 V a4 V a5)"
+        },
+        {
+          "label": "d2",
+          "expression": "(w3) V (a4 V a5)"
+        },
+        {
+          "label": "d1",
+          "expression": "(a4 V a5)"
+        }
+      ]
+    },
+    {
+      "level": "E1",
+      "conditions": [
+        {
+          "label": "E1",
+          "expression": "E1"
+        }
+      ]
+    }
+  ]
+}

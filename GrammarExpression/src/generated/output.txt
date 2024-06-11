@@ -20,12 +20,11 @@ Label: a5
 
 {
   "routeName": "Example Route",
-  "routeDifficulty": "Moderate",
+  "weatherConditions": "Moderate",
   "alert": "E3",
   "conditions": {
     "avalancheRisk": "a4 V a5",
     "wind": "w3",
     "fog": "f3"
-
   }
 }
